@@ -126,8 +126,6 @@ public class Game {
 				fov *= 0.99f;
 			}
 			
-			
-			
 			if(Keyboard.isKeyDown(Keyboard.KEY_D))
 			{
 				root.addPosition(new Vector3f(0.0f, 0.0f, 0.05f));				
@@ -155,7 +153,7 @@ public class Game {
 			}
 			
 			//pose!
-			pose(skeleton.root, curr, next, someamount, null);
+			//pose(skeleton.root, curr, next, someamount, null);
 			
 			
 			

@@ -12,8 +12,6 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import skeleton.Animation;
-import skeleton.Pose;
 import skeleton.Skeleton;
 
 public class Model{
@@ -54,9 +52,9 @@ public class Model{
 		this.col = new float[3];
 		
 		Random r = new Random();
-		col[0] = r.nextFloat();
-		col[1] = r.nextFloat();
-		col[2] = r.nextFloat();
+		col[0] = r.nextFloat() * 0.33f + 0.66f;
+		col[1] = r.nextFloat() * 0.33f + 0.66f;
+		col[2] = r.nextFloat() * 0.33f + 0.66f;
 		
 		this.position = new Vector3f();
 		this.rotation = new Quaternion(1.0f, 0.0f, 0.0f, rotationAmount);
@@ -85,9 +83,9 @@ public class Model{
 		glUniformMatrix4(skeletonUniform, true, skelebuf);
 	
 		
-		//TODO: use animation stuff here
-		List<Animation> animations = skeleton.animations;
-		Animation first = animations.get(0);
+		//TODO: migrate animation code here
+//		List<Animation> animations = skeleton.animations;
+//		Animation first = animations.get(0);
 		
 		glUniformMatrix4(modelUniform, false, GLOperations.generateFloatBuffer(model));		
 		
@@ -98,13 +96,12 @@ public class Model{
 	}
 
 	public void addChild(Model model) {
-		// TODO This should add it to a bone in particular! YEAH
+		// This should add it to a bone in particular! YEAH
 		this.children.add(model);
 		
 	}
 
 	public void removeChild(Model model) {
-		// TODO Do I need to do something here.
 		this.children.remove(model);
 	}
 	
