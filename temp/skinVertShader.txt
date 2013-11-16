@@ -1,0 +1,38 @@
+#version 130
+
+in vec3 position;
+in vec3 normal;
+in vec2 texCoord;
+in ivec3 jointIndices;
+in vec3 jointWeights;
+
+out vec3 fragNorm;
+out vec2 fragTexCoord;
+
+uniform vec3 cameraPosition;
+uniform mat4 viewPerspective;
+uniform mat4 model;
+uniform mat4 joints[32];
+uniform mat4 jointInvBinds[32];
+
+void main(){
+	//vec4 worldSpaceNormal = model * vec4(normal, 0.0);
+
+	fragNorm = normalize(normal.xyz);
+	fragTexCoord = texCoord;
+	
+	vec4 pos = vec4(position, 1.0);
+	vec4 outpos = vec4(0.0);
+
+	mat4 comp = mat4(0.0);
+
+ 	int ind = 0;
+ 	for(int i = 0;i < 3; i++){
+ 		ind = jointIndices[i];
+ 		comp = comp + jointWeights[ind] * joints[ind] * jointInvBinds[ind];
+ 	}
+ 	outpos = comp * pos;
+	
+	gl_Position = viewPerspective * model * outpos;
+}
+		
