@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.67.1 r57380</authoring_tool>
     </contributor>
-    <created>2013-11-11T17:45:24</created>
-    <modified>2013-11-11T17:45:24</modified>
+    <created>2013-11-17T00:04:01</created>
+    <modified>2013-11-17T00:04:01</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -206,6 +206,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Armature" name="Armature" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
         <translate sid="location">0 0 0</translate>
         <rotate sid="rotationZ">0 0 1 0</rotate>
         <rotate sid="rotationY">0 1 0 0</rotate>

@@ -380,12 +380,12 @@ public class ColladaLoader {
 		
 		
 		//Go over each bone index and add inverse bind to that bone
-//		for(Entry<String,Integer> e : boneIndices.entrySet()){
-//			skeleton.bones.get(e.getKey()).invBind = bindPoses.get(e.getValue());
-//		}
+		for(Entry<String,Integer> e : boneIndices.entrySet()){
+			skeleton.bones.get(e.getKey()).invBind = bindPoses.get(e.getValue());
+		}
 		
 		//recursively set inv bind poses
-		setInvBind(skeleton.root, null);
+//		setInvBind(skeleton.root, null);
 		
 		
 		values.put("vertexJointWeights", VertexJointWeights);
