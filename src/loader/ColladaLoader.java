@@ -236,9 +236,6 @@ public class ColladaLoader {
 		//	2. v:									this is the id of whatever vertices are weighted to. I wish it were joints but it's not
 		// 	3. vcount:								This is the number of joints? each vertex is weighted to, sort of like a variable stride
 		
-		//	New things
-		// 	Inverse bind poses look like they are necessary. Looks like they are used to go between world and bone spaces. 
-		
 		Node lib_controller = findChild(d.getElementsByTagName("library_controllers"), "library_controllers");
 		
 		Node controller = findChild(lib_controller.getChildNodes(), "controller");
@@ -383,9 +380,12 @@ public class ColladaLoader {
 		
 		
 		//Go over each bone index and add inverse bind to that bone
-		for(Entry<String,Integer> e : boneIndices.entrySet()){
-			skeleton.bones.get(e.getKey()).invBind = bindPoses.get(e.getValue());
-		}
+//		for(Entry<String,Integer> e : boneIndices.entrySet()){
+//			skeleton.bones.get(e.getKey()).invBind = bindPoses.get(e.getValue());
+//		}
+		
+		//recursively set inv bind poses
+		setInvBind(skeleton.root, null);
 		
 		
 		values.put("vertexJointWeights", VertexJointWeights);
@@ -393,6 +393,24 @@ public class ColladaLoader {
 		return rearrange(values);
 	}
 
+	private static void setInvBind(Bone bone, Matrix4f parent){
+		
+		for(Bone b : bone.children){
+			Matrix4f inv = new Matrix4f();
+			
+			if(parent != null){
+				Matrix4f.mul(b.transform, parent, inv);
+			}
+			else{
+				inv.load(b.transform);
+			}
+			inv.invert();
+			
+			b.setInvBind(inv);
+			setInvBind(b, bone.transform);
+		}
+	}
+	
 	//recursively add bones if the xml has subnodes.
 	private static void addBones(Skeleton skeleton, String rootName, Node node, List<Bone> boneIndices){
 		String boneName = getAttribute(node, "name");

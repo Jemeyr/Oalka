@@ -58,7 +58,8 @@ public class GLOperations {
 			maxBone = maxBone > boneIndex ? maxBone : boneIndex;
 			
 			fbuf.position(16 * boneIndex);
-			e.getValue().transform.storeTranspose(fbuf);
+			
+			bone.transform.storeTranspose(fbuf);
 		}
 		fbuf.position(16 * maxBone + 16);
 		fbuf.flip();
@@ -82,7 +83,8 @@ public class GLOperations {
 			maxBone = maxBone > boneIndex ? maxBone : boneIndex;
 			
 			fbuf.position(16 * boneIndex);
-			e.getValue().invBind.storeTranspose(fbuf);
+			
+			bone.invBind.storeTranspose(fbuf);
 		}
 		fbuf.position(16 * maxBone + 16);
 		fbuf.flip();

@@ -74,7 +74,7 @@ public class Game {
 		float fov = 90.0f;
 		
 		
-		String[] filenames = {"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/werman.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
 		root = renderMaster.addModel("temp/werman.dae");
