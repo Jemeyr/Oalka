@@ -43,7 +43,7 @@ public class ModelFactory {
 			HashMap<String, Object> modelData = ColladaLoader.load(filename);
 			
 			//HACK
-			if(filename.equals("temp/werman.dae")){
+			if(filename.equals("temp/tt.dae")){
 				Game.skeleton = (Skeleton)modelData.get("skeleton");
 				Game.animation = (Animation)modelData.get("animation");
 			}
