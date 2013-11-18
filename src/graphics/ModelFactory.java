@@ -1,18 +1,14 @@
 package graphics;
 
-import game.Game;
-
 import java.util.HashMap;
 
 import loader.ColladaLoader;
-import skeleton.Animation;
 import skeleton.Skeleton;
 
 public class ModelFactory {
 	
 	private Shader skinnedShader;
 	
-	private Skeleton hackySkeleton;
 	
 	private HashMap<String, Mesh> loadedMeshes;
 	
@@ -40,11 +36,6 @@ public class ModelFactory {
 		if(!loadedMeshes.containsKey(filename))
 		{
 			HashMap<String, Object> modelData = ColladaLoader.load(filename);
-			
-			//only set it if it's true, otherwise we overwrite with null, durr
-			if(modelData.containsKey("skeleton")){
-				this.hackySkeleton = (Skeleton)modelData.get("skeleton");
-			}
 			
 			Mesh mesh = new Mesh(filename, skinnedShader, modelData);
 			

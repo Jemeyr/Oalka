@@ -47,6 +47,14 @@ public class Game {
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
 		
+//		for(int i = 0; i < 5; i++){
+//			for(int j = 0; j < 5; j++){
+//				root = renderMaster.addModel("temp/smoothatan.dae");
+//				root.addPosition(new Vector3f(-50.f + 20.f*j, -5.0f, -25.f + 10.f * i));
+//				root.addRotation(q);		
+//			}
+//		}
+		
 
 		while(!Display.isCloseRequested())
 		{
