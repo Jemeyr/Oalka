@@ -30,37 +30,7 @@ public class Game {
 	
 	public static List<Matrix4f> bindPoses;
 	public static List<String> joints;
-	
-	public static void pose(Bone bone, int alpha, int beta, float amount, Matrix4f parent){
-		
-		//Only body seems to do anything right now
-		for(Bone b : bone.children){
-			
-			
-			List<Pose> poses = animation.getPoses(b.name);
-			Matrix4f am = poses.get(alpha).getTransform();
-			Matrix4f bm = poses.get(beta).getTransform();
-			
-			
-			
-			Matrix4f m = new Matrix4f();
-			//LERPING MATRICES COMPONENT-WISE IS GREAT! AW YEAH
-			m.m00 = am.m00 * (1.0f - amount) + bm.m00 * amount;	m.m01 = am.m01 * (1.0f - amount) + bm.m01 * amount;	m.m02 = am.m02 * (1.0f - amount) + bm.m02 * amount;	m.m03 = am.m03 * (1.0f - amount) + bm.m03 * amount;
-			m.m10 = am.m10 * (1.0f - amount) + bm.m10 * amount;	m.m11 = am.m11 * (1.0f - amount) + bm.m11 * amount;	m.m12 = am.m12 * (1.0f - amount) + bm.m12 * amount;	m.m13 = am.m13 * (1.0f - amount) + bm.m13 * amount;
-			m.m20 = am.m20 * (1.0f - amount) + bm.m20 * amount;	m.m21 = am.m21 * (1.0f - amount) + bm.m21 * amount;	m.m22 = am.m22 * (1.0f - amount)+ bm.m22 * amount;	m.m23 = am.m23 * (1.0f - amount) + bm.m23 * amount;
-			m.m30 = am.m30 * (1.0f - amount) + bm.m30 * amount;	m.m31 = am.m31 * (1.0f - amount) + bm.m31 * amount;	m.m32 = am.m32 * (1.0f - amount) + bm.m32 * amount;	m.m33 = am.m33 * (1.0f - amount) + bm.m33 * amount;
 
-			//set transform of our bone
-			b.transform.load(m);
-			
-			if(parent != null){
-				Matrix4f.mul(parent, b.transform, b.transform);
-			}
-			
-			pose(b, alpha, beta, amount, b.transform);
-			
-		}
-	}
 	
 	public static void main(String[] args)
 	{
@@ -74,10 +44,10 @@ public class Game {
 		float fov = 90.0f;
 		
 		
-		String[] filenames = {"temp/skeletan.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/smoothatan.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
-		root = renderMaster.addModel("temp/skeletan.dae");
+		root = renderMaster.addModel("temp/smoothatan.dae");
 		Quaternion q = new Quaternion();
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
@@ -90,8 +60,9 @@ public class Game {
 		int curr = 0;
 		int next = 1;
 		
+		float diff = 0.1f;
+		
 
-		pose(skeleton.root, curr, next, someamount, null);
 		while(!Display.isCloseRequested())
 		{
 			//close if escape is hit
@@ -102,81 +73,46 @@ public class Game {
 			
 			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
 			{
-				rotation += 0.015f;	
+				rotation += 0.03f;	
 			}else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 			{
-				rotation -= 0.015f;
+				rotation -= 0.03f;
 			}
 			
 			if(Keyboard.isKeyDown(Keyboard.KEY_UP))
 			{
-				height += 0.05f;	
+				height += 0.5f;	
 				
 			}else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN))
 			{
-				height -= 0.05f;
+				height -= 0.5f;
 			}
 			
-			if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
-			{
-				fov *= 1.01f;
-			}
-			else if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-			{
-				fov *= 0.99f;
-			}
 			
-			if(Keyboard.isKeyDown(Keyboard.KEY_D))
-			{
-				root.addPosition(new Vector3f(0.0f, 0.0f, 0.05f));				
-			}
-			else if(Keyboard.isKeyDown(Keyboard.KEY_A))
-			{
-				root.addPosition(new Vector3f(0.0f, 0.0f, -0.05f));	
-			}
 			if(Keyboard.isKeyDown(Keyboard.KEY_W))
 			{
-				root.addPosition(new Vector3f(-0.05f, 0.0f, 0.0f));
+				root.addPosition(new Vector3f(0.0f, 0.0f, 0.1f));				
 			}
 			else if(Keyboard.isKeyDown(Keyboard.KEY_S))
 			{
-				root.addPosition(new Vector3f(0.05f, 0.0f, 0.0f));
+				root.addPosition(new Vector3f(0.0f, 0.0f, -0.1f));	
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_D))
+			{
+				root.addPosition(new Vector3f(-0.1f, 0.0f, 0.0f));
+			}
+			else if(Keyboard.isKeyDown(Keyboard.KEY_A))
+			{
+				root.addPosition(new Vector3f(0.1f, 0.0f, 0.0f));
 			}
 
-			if(Keyboard.isKeyDown(Keyboard.KEY_H)){
-				someamount += 0.3f;
-			}
-			else if(Keyboard.isKeyDown(Keyboard.KEY_J)){
-				someamount -= 0.1f;
-			}
-			
-			if(someamount > 1.0f){
-				curr = next;
-				next = next == frames - 1 ? 0 : next + 1;
-				someamount = 0.0f;
-			}
-			if(someamount < 0.0f){
-				next = curr;
-				curr = curr == 0 ? frames - 1 : curr - 1;
-				someamount = 1.0f;
-			}
 			
 			
-			//pose!
-			pose(skeleton.root, curr, next, someamount, null);
-			
-			
-			
-			fov = fov > 180.0f ? 180.0f : fov <= 0.0f ? 0.0f : fov;
-			
-			lent = 15f / (float)Math.atan(fov * 0.0349066);
+			lent = 30f / (float)Math.atan(fov * 0.0349066);
 			
 			camera.setPosition(new Vector3f(lent * (float)Math.sin(rotation), 
 											height, 
 											lent * (float)Math.cos(rotation)));
-			
-			camera.setFOV(fov);
-			
 			
 			
 			renderMaster.render();

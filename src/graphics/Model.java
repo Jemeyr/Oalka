@@ -12,6 +12,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import skeleton.Bone;
+import skeleton.Pose;
 import skeleton.Skeleton;
 
 public class Model{
@@ -33,13 +35,17 @@ public class Model{
 	private float rotationAmount = 0.0f;
 	
 	private Skeleton skeleton;
-//	private Pose pose;
-//	private long lastTime;
+
 	
+	private long lastTime;
 	
 	private int inverseBindUniform;
 	private int skeletonUniform;
 
+	private int lastIndex = 0;
+	private int nextIndex = 1;
+	private float interpolationStep = 0.0f;
+	
 	protected Model(Mesh mesh, Shader shader, Skeleton skeleton)
 	{	
 		this.colorUniform = shader.getUniforms().get("color");
@@ -73,19 +79,28 @@ public class Model{
 		
 		
 		this.skeleton = skeleton;
-//		lastTime = System.currentTimeMillis();
+		lastTime = System.currentTimeMillis();
 	}
 	
 	
 	public void draw(long time) {
 		
+		interpolationStep += (float)(time - lastTime) / 1000.0f;
+		
+		if(interpolationStep > 1.0f){
+			interpolationStep = 0.0f;
+			lastIndex = nextIndex;
+			nextIndex = (nextIndex + 1) % skeleton.animations.get(0).getPoses("Body").size();
+		}
+		
+		
+		//pose here
+		pose(skeleton.root, lastIndex, nextIndex, interpolationStep, null);
+		
+		
 		FloatBuffer skelebuf = GLOperations.generatePoseFloatBuffer(skeleton);
 		glUniformMatrix4(skeletonUniform, true, skelebuf);
 	
-		
-		//TODO: migrate animation code here
-//		List<Animation> animations = skeleton.animations;
-//		Animation first = animations.get(0);
 		
 		glUniformMatrix4(modelUniform, false, GLOperations.generateFloatBuffer(model));		
 		
@@ -93,8 +108,42 @@ public class Model{
 
 		mesh.draw();
 		
+		lastTime = time;
 	}
 
+	
+
+	public void pose(Bone bone, int alpha, int beta, float amount, Matrix4f parent){
+		
+		//Only body seems to do anything right now
+		for(Bone b : bone.children){
+			
+			
+			Matrix4f am = this.skeleton.animations.get(0).getPoses(b.name).get(alpha).getTransform();
+			Matrix4f bm = this.skeleton.animations.get(0).getPoses(b.name).get(beta).getTransform();
+			
+			
+			
+			Matrix4f m = new Matrix4f();
+			//LERPING MATRICES COMPONENT-WISE IS GREAT! AW YEAH
+			m.m00 = am.m00 * (1.0f - amount) + bm.m00 * amount;	m.m01 = am.m01 * (1.0f - amount) + bm.m01 * amount;	m.m02 = am.m02 * (1.0f - amount) + bm.m02 * amount;	m.m03 = am.m03 * (1.0f - amount) + bm.m03 * amount;
+			m.m10 = am.m10 * (1.0f - amount) + bm.m10 * amount;	m.m11 = am.m11 * (1.0f - amount) + bm.m11 * amount;	m.m12 = am.m12 * (1.0f - amount) + bm.m12 * amount;	m.m13 = am.m13 * (1.0f - amount) + bm.m13 * amount;
+			m.m20 = am.m20 * (1.0f - amount) + bm.m20 * amount;	m.m21 = am.m21 * (1.0f - amount) + bm.m21 * amount;	m.m22 = am.m22 * (1.0f - amount)+ bm.m22 * amount;	m.m23 = am.m23 * (1.0f - amount) + bm.m23 * amount;
+			m.m30 = am.m30 * (1.0f - amount) + bm.m30 * amount;	m.m31 = am.m31 * (1.0f - amount) + bm.m31 * amount;	m.m32 = am.m32 * (1.0f - amount) + bm.m32 * amount;	m.m33 = am.m33 * (1.0f - amount) + bm.m33 * amount;
+
+			//set transform of our bone
+			b.transform.load(m);
+			
+			if(parent != null){
+				Matrix4f.mul(parent, b.transform, b.transform);
+			}
+			pose(b, alpha, beta, amount, b.transform);
+		}
+	}
+	
+	
+	
+	
 	public void addChild(Model model) {
 		// This should add it to a bone in particular! YEAH
 		this.children.add(model);
