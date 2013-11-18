@@ -14,16 +14,9 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import skeleton.Animation;
-import skeleton.Bone;
-import skeleton.Pose;
-import skeleton.Skeleton;
-
 public class Game {
 
 	//hacks for demoing stuff to myself
-	public static Skeleton skeleton;
-	public static Animation animation;
 	public static int frames;
 	
 	public static Model root;
@@ -53,14 +46,6 @@ public class Game {
 		
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
-		
-		Game.frames = Game.animation.getPoses("Body").size();		//Hacky static use of bone name, but the whole thing is hacky so deal with it.
-		
-		float someamount = 0.0f;
-		int curr = 0;
-		int next = 1;
-		
-		float diff = 0.1f;
 		
 
 		while(!Display.isCloseRequested())

@@ -17,6 +17,27 @@ public class Skeleton {
 
 	private Map<Bone, Integer> boneIndices;
 	
+	public Skeleton(Skeleton prev){
+		this.bones = new HashMap<String,Bone>();
+		this.animations = new ArrayList<Animation>();
+		
+		//copy initial bones and animations
+		for(Entry<String,Bone> e : prev.bones.entrySet()){
+			this.bones.put(e.getKey(), e.getValue());
+		}
+		
+		for(Animation a : prev.animations){
+			this.animations.add(a);
+		}
+		
+		
+		Matrix4f identity=  new Matrix4f();
+		identity.setIdentity();
+		
+		this.root = new Bone(ROOT, identity);
+		this.bones.put(root.name, root);
+	}
+	
 	public Skeleton(){
 		this.bones = new HashMap<String,Bone>();
 		this.animations = new ArrayList<Animation>();

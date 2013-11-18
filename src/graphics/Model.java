@@ -13,7 +13,6 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import skeleton.Bone;
-import skeleton.Pose;
 import skeleton.Skeleton;
 
 public class Model{
@@ -46,7 +45,7 @@ public class Model{
 	private int nextIndex = 1;
 	private float interpolationStep = 0.0f;
 	
-	protected Model(Mesh mesh, Shader shader, Skeleton skeleton)
+	protected Model(Mesh mesh, Shader shader)
 	{	
 		this.colorUniform = shader.getUniforms().get("color");
 		this.modelUniform = shader.getUniforms().get("model");
@@ -67,6 +66,8 @@ public class Model{
 		
 		this.model = new Matrix4f();
 		calculateModelMatrix();
+
+		this.skeleton = mesh.skeleton;
 		
 		this.inverseBindUniform = shader.getUniforms().get("jointInvBinds");
 		this.skeletonUniform = shader.getUniforms().get("joints");
@@ -78,7 +79,6 @@ public class Model{
 		glUniformMatrix4(skeletonUniform, true, skelebuf);
 		
 		
-		this.skeleton = skeleton;
 		lastTime = System.currentTimeMillis();
 	}
 	

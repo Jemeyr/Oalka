@@ -32,22 +32,14 @@ public class ModelFactory {
 		
 		Mesh m = loadedMeshes.get(filename);
 
-		return new Model(m, this.skinnedShader, hackySkeleton);
+		return new Model(m, this.skinnedShader);
 	}
 	
 	public void loadModel(String filename)
 	{
 		if(!loadedMeshes.containsKey(filename))
 		{
-
 			HashMap<String, Object> modelData = ColladaLoader.load(filename);
-			
-			//HACK
-			if(filename.equals("temp/smoothatan.dae")){
-				Game.skeleton = (Skeleton)modelData.get("skeleton");
-				Game.animation = (Animation)modelData.get("animation");
-			}
-			
 			
 			//only set it if it's true, otherwise we overwrite with null, durr
 			if(modelData.containsKey("skeleton")){

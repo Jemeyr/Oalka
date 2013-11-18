@@ -26,6 +26,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 
+import skeleton.Skeleton;
+
 public class Mesh{
 
 	private int vao;
@@ -52,12 +54,15 @@ public class Mesh{
 	private int jointWeightAttribute;
 	private int jointIndexAttribute;
 	
+	protected Skeleton skeleton;//hacky, at some point we should differentiate between instance bones/skeleton and mesh one
 	
 	public Mesh(String filename, Shader shader, HashMap<String, Object> modelData)
 	{
 		if(shader.getAttributes().get("jointWeights") != null && modelData.get("skeleton") != null){
 			skinned = true;
 		}
+		
+		this.skeleton = (Skeleton)modelData.get("skeleton");
 		
 		this.positionAttribute = shader.getAttributes().get("position");
 		this.normalAttribute = shader.getAttributes().get("normal");
