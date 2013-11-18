@@ -143,14 +143,24 @@ public class Game {
 				root.addPosition(new Vector3f(0.05f, 0.0f, 0.0f));
 			}
 
-			someamount += 0.01f;
+			if(Keyboard.isKeyDown(Keyboard.KEY_H)){
+				someamount += 0.3f;
+			}
+			else if(Keyboard.isKeyDown(Keyboard.KEY_J)){
+				someamount -= 0.1f;
+			}
 			
 			if(someamount > 1.0f){
 				curr = next;
 				next = next == frames - 1 ? 0 : next + 1;
 				someamount = 0.0f;
-				System.out.println("curr/next: " + curr + "/" + next);
 			}
+			if(someamount < 0.0f){
+				next = curr;
+				curr = curr == 0 ? frames - 1 : curr - 1;
+				someamount = 1.0f;
+			}
+			
 			
 			//pose!
 			pose(skeleton.root, curr, next, someamount, null);
