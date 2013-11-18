@@ -17,25 +17,13 @@ public class Skeleton {
 
 	private Map<Bone, Integer> boneIndices;
 	
+	//TODO: go deeper, make copies of bones?
 	public Skeleton(Skeleton prev){
-		this.bones = new HashMap<String,Bone>();
-		this.animations = new ArrayList<Animation>();
+		this.bones = new HashMap<String,Bone>(prev.bones);
+		this.animations = new ArrayList<Animation>(prev.animations);
+		this.boneIndices = new HashMap<Bone,Integer>(prev.boneIndices);
+		this.root = prev.root;
 		
-		//copy initial bones and animations
-		for(Entry<String,Bone> e : prev.bones.entrySet()){
-			this.bones.put(e.getKey(), e.getValue());
-		}
-		
-		for(Animation a : prev.animations){
-			this.animations.add(a);
-		}
-		
-		
-		Matrix4f identity=  new Matrix4f();
-		identity.setIdentity();
-		
-		this.root = new Bone(ROOT, identity);
-		this.bones.put(root.name, root);
 	}
 	
 	public Skeleton(){

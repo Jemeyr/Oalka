@@ -3,7 +3,6 @@ package graphics;
 import java.util.HashMap;
 
 import loader.ColladaLoader;
-import skeleton.Skeleton;
 
 public class ModelFactory {
 	
@@ -40,7 +39,6 @@ public class ModelFactory {
 			Mesh mesh = new Mesh(filename, skinnedShader, modelData);
 			
 			loadedMeshes.put(filename, mesh);
-	
 		}
 	}
 	

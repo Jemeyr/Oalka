@@ -67,7 +67,7 @@ public class Model{
 		this.model = new Matrix4f();
 		calculateModelMatrix();
 
-		this.skeleton = mesh.skeleton;
+		this.skeleton = new Skeleton(mesh.skeleton);
 		
 		this.inverseBindUniform = shader.getUniforms().get("jointInvBinds");
 		this.skeletonUniform = shader.getUniforms().get("joints");
