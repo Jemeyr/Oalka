@@ -384,31 +384,10 @@ public class ColladaLoader {
 			skeleton.bones.get(e.getKey()).invBind = bindPoses.get(e.getValue());
 		}
 		
-		//recursively set inv bind poses
-//		setInvBind(skeleton.root, null);
-		
 		
 		values.put("vertexJointWeights", VertexJointWeights);
 		
 		return rearrange(values);
-	}
-
-	private static void setInvBind(Bone bone, Matrix4f parent){
-		
-		for(Bone b : bone.children){
-			Matrix4f inv = new Matrix4f();
-			
-			if(parent != null){
-				Matrix4f.mul(b.transform, parent, inv);
-			}
-			else{
-				inv.load(b.transform);
-			}
-			inv.invert();
-			
-			b.setInvBind(inv);
-			setInvBind(b, bone.transform);
-		}
 	}
 	
 	//recursively add bones if the xml has subnodes.

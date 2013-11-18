@@ -74,17 +74,17 @@ public class Game {
 		float fov = 90.0f;
 		
 		
-		String[] filenames = {"temp/tt.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/skeletan.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
-		root = renderMaster.addModel("temp/tt.dae");
+		root = renderMaster.addModel("temp/skeletan.dae");
 		Quaternion q = new Quaternion();
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
 		
-		Game.frames = Game.animation.getPoses("L").size();		//Hacky static use of bone name, but the whole thing is hacky so deal with it.
+		Game.frames = Game.animation.getPoses("Body").size();		//Hacky static use of bone name, but the whole thing is hacky so deal with it.
 		
 		float someamount = 0.0f;
 		int curr = 0;
