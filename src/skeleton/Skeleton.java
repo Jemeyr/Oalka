@@ -12,6 +12,7 @@ public class Skeleton {
 	public static final String ROOT = "root";
 	
 	public List<Animation> animations;
+	private Anim anim;//TODO: come on, multiple animations
 	public Map<String, Bone> bones;
 	public Bone root;
 
@@ -24,6 +25,8 @@ public class Skeleton {
 		this.boneIndices = new HashMap<Bone,Integer>(prev.boneIndices);
 		this.root = prev.root;
 		
+		this.anim = prev.anim;
+		
 	}
 	
 	public Skeleton(){
@@ -35,6 +38,14 @@ public class Skeleton {
 		
 		this.root = new Bone(ROOT, identity);
 		this.bones.put(root.name, root);
+	}
+	
+	public void setAnim(Anim anim){
+		this.anim = anim;
+	}
+	
+	public Anim getAnim(){
+		return this.anim;
 	}
 	
 	public void addAnimation(Animation animation){

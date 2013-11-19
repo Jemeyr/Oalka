@@ -6,6 +6,8 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Matrix4f;
@@ -84,18 +86,22 @@ public class Model{
 	
 	
 	public void draw(long time) {
-		
-		interpolationStep += (float)(time - lastTime) / 1000.0f;
-		
-		if(interpolationStep > 1.0f){
-			interpolationStep = 0.0f;
-			lastIndex = nextIndex;
-			nextIndex = (nextIndex + 1) % skeleton.animations.get(0).getPoses("Body").size();
-		}
+//		
+//		interpolationStep += (float)(time - lastTime) / 1000.0f;
+//		
+//		if(interpolationStep > 1.0f){
+//			interpolationStep = 0.0f;
+//			lastIndex = nextIndex;
+//			nextIndex = (nextIndex + 1) % skeleton.animations.get(0).getPoses("Body").size();
+//		}
 		
 		
 		//pose here
 		pose(skeleton.root, lastIndex, nextIndex, interpolationStep, null);
+		Map<String, Matrix4f> p = skeleton.getAnim().getPose(time);
+		
+		//recursively fill out the tree?
+		poise(skeleton.root, p, null);
 		
 		
 		FloatBuffer skelebuf = GLOperations.generatePoseFloatBuffer(skeleton);
@@ -111,7 +117,18 @@ public class Model{
 		lastTime = time;
 	}
 
-	
+	private void poise(Bone bone, Map<String, Matrix4f> pose, Matrix4f parent){
+		
+		for(Bone b : bone.children){
+			b.transform.load(pose.get(b.name));
+			if(parent != null){
+				Matrix4f.mul(parent, b.transform, b.transform);
+			}
+			poise(b, pose, b.transform);
+		}
+		
+		
+	}
 
 	public void pose(Bone bone, int alpha, int beta, float amount, Matrix4f parent){
 		
@@ -121,7 +138,6 @@ public class Model{
 			
 			Matrix4f am = this.skeleton.animations.get(0).getPoses(b.name).get(alpha).getTransform();
 			Matrix4f bm = this.skeleton.animations.get(0).getPoses(b.name).get(beta).getTransform();
-			
 			
 			
 			Matrix4f m = new Matrix4f();

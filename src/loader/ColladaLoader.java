@@ -24,6 +24,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import skeleton.Anim;
 import skeleton.Animation;
 import skeleton.Bone;
 import skeleton.Pose;
@@ -152,10 +153,17 @@ public class ColladaLoader {
 		List<Node> animList = findChildren(animations.getChildNodes(), "animation");
 		
 		List<Pose> poses;
+		
+		//deprecating
 		Animation anim = new Animation("whatever");
 		
+		
+		//new info
+		Map<String, List<Pose>> animData = new HashMap<String, List<Pose>>();
+		float[] keyframeData = null;
+		float[] keyframes = null;
+		
 		for(Node node : animList){
-			float[] keyframes = null;
 			Matrix4f[] transforms = null;
 			int framecount = 0;
 			
@@ -175,8 +183,15 @@ public class ColladaLoader {
 					String sval = frameNode.getTextContent();
 					String[] keyf = sval.split(" ");
 					keyframes = new float[framecount];
+					
+					//new
+					if(keyframeData == null){
+						keyframeData = new float[framecount];
+					}
+					
 					for(int i = 0; i < keyf.length; i++){
 						keyframes[i] = (int)(24 * Float.parseFloat(keyf[i]));
+						keyframeData[i] = (int)(24 * Float.parseFloat(keyf[i]));//keep me
 					}
 				}
 				//output contains the actual transform matrices
@@ -216,16 +231,20 @@ public class ColladaLoader {
 				}
 				
 				anim.addBone(id, poses);
+				animData.put(id, poses);
 				
 			}
 			
 		}
-		values.put("animation", anim);
+		values.put("keyframes", keyframeData);
 		
 		//add the animation to the skeleton
 		//TODO: make this generalized
 		skeleton.animations.add(anim);
-
+		//TODO: add anim to skeleton
+		Anim skelanim = new Anim(true, animData, keyframes);
+		skeleton.setAnim(skelanim);
+		
 		
 		
 		//Load the vertex weights

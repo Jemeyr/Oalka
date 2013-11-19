@@ -13,7 +13,6 @@ public class Bone {
 	protected Bone parent;
 	public List<Bone> children;
 	
-	
 	//constructor assumes that a root bone is made
 	public Bone(String name, Matrix4f offset){	
 		this.children = new ArrayList<Bone>();
