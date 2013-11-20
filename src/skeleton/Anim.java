@@ -77,7 +77,7 @@ public class Anim {
 
 	public Map<String, Matrix4f> getPose(long time){
 
-		interpolationStep += (float)(time - lastTime) / 1000.0f;
+		interpolationStep += 0.01f;//(float)(time - lastTime) / 1000.0f;
 		//TODO: scale by fps?
 		
 		if(interpolationStep > 1.0f){
@@ -97,7 +97,6 @@ public class Anim {
 			System.out.println("interpolating from " + lastIndex + " to " + nextIndex);
 			
 		}
-		System.out.println(interpolationStep);
 		
 		
 		//set current pose from interpolating members between the two keyframes
@@ -106,7 +105,7 @@ public class Anim {
 		
 		for(Entry<String, Matrix4f> e : this.currentPose.entrySet()){
 			String id = e.getKey();
-			Matrix4f result = matrixInterpolate(a.get(id),b.get(id),interpolationStep);
+			Matrix4f result = new Matrix4f(matrixInterpolate(a.get(id),b.get(id),interpolationStep));
 			
 			this.currentPose.put(id, result);
 		}
@@ -129,6 +128,7 @@ public class Anim {
 	//no news every pose, ugh
 	private static Matrix4f m = new Matrix4f();
 	private static Matrix4f matrixInterpolate(Matrix4f a, Matrix4f b, float interpolationStep){
+
 		m.setZero();
 		
 		float inverseStep = 1.00f - interpolationStep;
