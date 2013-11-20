@@ -1,8 +1,6 @@
 package skeleton;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -10,9 +8,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class Skeleton {
 	public static final String ROOT = "root";
-	
-	public List<Animation> animations;
-	private Anim anim;//TODO: come on, multiple animations
+
+	private Animation anim;//TODO: come on, multiple animations
 	public Map<String, Bone> bones;
 	public Bone root;
 
@@ -21,7 +18,6 @@ public class Skeleton {
 	//TODO: go deeper, make copies of bones?
 	public Skeleton(Skeleton prev){
 		this.bones = new HashMap<String,Bone>(prev.bones);
-		this.animations = new ArrayList<Animation>(prev.animations);
 		this.boneIndices = new HashMap<Bone,Integer>(prev.boneIndices);
 		this.root = prev.root;
 		
@@ -31,7 +27,6 @@ public class Skeleton {
 	
 	public Skeleton(){
 		this.bones = new HashMap<String,Bone>();
-		this.animations = new ArrayList<Animation>();
 		
 		Matrix4f identity=  new Matrix4f();
 		identity.setIdentity();
@@ -40,16 +35,12 @@ public class Skeleton {
 		this.bones.put(root.name, root);
 	}
 	
-	public void setAnim(Anim anim){
+	public void setAnim(Animation anim){
 		this.anim = anim;
 	}
 	
-	public Anim getAnim(){
+	public Animation getAnim(){
 		return this.anim;
-	}
-	
-	public void addAnimation(Animation animation){
-		this.animations.add(animation);
 	}
 	
 	public void addRoot(String childName, Matrix4f offset){

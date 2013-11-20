@@ -24,7 +24,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import skeleton.Anim;
 import skeleton.Animation;
 import skeleton.Bone;
 import skeleton.Pose;
@@ -154,10 +153,6 @@ public class ColladaLoader {
 		
 		List<Pose> poses;
 		
-		//deprecating
-		Animation anim = new Animation("whatever");
-		
-		
 		//new info
 		Map<String, List<Pose>> animData = new HashMap<String, List<Pose>>();
 		float[] keyframeData = null;
@@ -234,7 +229,6 @@ public class ColladaLoader {
 					poses.add(new Pose(keyframes[i], transforms[i]));
 				}
 
-				anim.addBone(id, poses);
 				animData.put(id, poses);
 				
 			}
@@ -243,10 +237,7 @@ public class ColladaLoader {
 		values.put("keyframes", keyframeData);
 		
 		//add the animation to the skeleton
-		//TODO: make this generalized
-		skeleton.animations.add(anim);
-		//TODO: add anim to skeleton
-		Anim skelanim = new Anim(true, animData, keyframes);
+		Animation skelanim = new Animation(true, animData, keyframes);
 		skeleton.setAnim(skelanim);
 		
 		

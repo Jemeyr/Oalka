@@ -7,7 +7,6 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import org.lwjgl.util.vector.Matrix4f;
@@ -80,7 +79,7 @@ public class Model{
 		
 		Map<String, Matrix4f> p = skeleton.getAnim().getPose(time);
 		
-		//recursively fill out the tree?
+		//recursively fill out the tree
 		pose(skeleton.root, p, null);
 		
 		
