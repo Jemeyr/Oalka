@@ -97,7 +97,7 @@ public class Model{
 		
 		
 		//pose here
-		pose(skeleton.root, lastIndex, nextIndex, interpolationStep, null);
+		//pose(skeleton.root, lastIndex, nextIndex, interpolationStep, null);
 		Map<String, Matrix4f> p = skeleton.getAnim().getPose(time);
 		
 		//recursively fill out the tree?

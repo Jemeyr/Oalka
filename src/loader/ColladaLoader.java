@@ -162,6 +162,7 @@ public class ColladaLoader {
 		Map<String, List<Pose>> animData = new HashMap<String, List<Pose>>();
 		float[] keyframeData = null;
 		float[] keyframes = null;
+		int hel = 0;
 		
 		for(Node node : animList){
 			Matrix4f[] transforms = null;
@@ -217,19 +218,24 @@ public class ColladaLoader {
 							
 							buffer.flip();
 						}
-					}
-					
+					}	
+				}
+				else //if it's not input or output, we are done
+				{
+					continue;
 				}
 				
 				if(transforms == null || keyframes == null){
 					continue;
 				}
 				
+				
 				poses = new ArrayList<Pose>();
 				for(int i = 0; i <  framecount; i++){
 					poses.add(new Pose(keyframes[i], transforms[i]));
 				}
-				
+
+				System.out.println("adding another bone id = " + "'" + id +"'" + " size " + (++hel));
 				anim.addBone(id, poses);
 				animData.put(id, poses);
 				
