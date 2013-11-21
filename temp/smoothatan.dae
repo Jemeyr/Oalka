@@ -97,6 +97,7 @@
     </geometry>
   </library_geometries>
   <library_animations>
+  <animationset id="bow">
     <animation id="Armature_Body_pose_matrix">
       <source id="Armature_Body_pose_matrix-input">
         <float_array id="Armature_Body_pose_matrix-input-array" count="4">0 0.6666667 1.25 2.083333</float_array>
@@ -545,6 +546,7 @@
       </sampler>
       <channel source="#Armature_Shin_l_pose_matrix-sampler" target="Shin_l/transform"/>
     </animation>
+    </animationset>
   </library_animations>
   <library_controllers>
     <controller id="Armature_Cube-skin" name="Armature">

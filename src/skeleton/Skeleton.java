@@ -1,6 +1,7 @@
 package skeleton;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -9,7 +10,7 @@ import org.lwjgl.util.vector.Matrix4f;
 public class Skeleton {
 	public static final String ROOT = "root";
 
-	private Animation anim;//TODO: come on, multiple animations
+	private List<Animation> anims;
 	public Map<String, Bone> bones;
 	public Bone root;
 
@@ -21,7 +22,7 @@ public class Skeleton {
 		this.boneIndices = new HashMap<Bone,Integer>(prev.boneIndices);
 		this.root = prev.root;
 		
-		this.anim = prev.anim;
+		this.anims = prev.anims;
 		
 	}
 	
@@ -35,12 +36,12 @@ public class Skeleton {
 		this.bones.put(root.name, root);
 	}
 	
-	public void setAnim(Animation anim){
-		this.anim = anim;
+	public void setAnims(List<Animation> anims){
+		this.anims = anims;
 	}
 	
-	public Animation getAnim(){
-		return this.anim;
+	public List<Animation> getAnims(){
+		return this.anims;
 	}
 	
 	public void addRoot(String childName, Matrix4f offset){

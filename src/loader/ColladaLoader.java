@@ -149,96 +149,119 @@ public class ColladaLoader {
 			return rearrange(values);
 		}
 		
-		List<Node> animList = findChildren(animations.getChildNodes(), "animation");
-		
-		List<Pose> poses;
-		
+
 		//new info
-		Map<String, List<Pose>> animData = new HashMap<String, List<Pose>>();
+		Map<String, Map<String, List<Pose>>> animDataMap = new HashMap<String, Map<String, List<Pose>>>();
+		
 		float[] keyframeData = null;
 		float[] keyframes = null;
 		
-		for(Node node : animList){
-			Matrix4f[] transforms = null;
-			int framecount = 0;
+		List<Pose> poses;
+		
+		//get animation sets
+		List<Node> animsetList = findChildren(animations.getChildNodes(), "animationset");
+		
+		for(Node animationNode : animsetList){
 			
-			String id = getAttribute(node, "id").replace("Armature_", "").replace("_pose_matrix", "").replace("_",".");
+			//get name
+			String animsetName;
+			Map<String, List<Pose>> animData = new HashMap<String, List<Pose>>();
 			
-			List<Node> animationSources = findChildren(node.getChildNodes(), "source");
+			List<Node> animList = findChildren(animationNode.getChildNodes(), "animation");
 			
-			for(Node source : animationSources){
-				String sid = getAttribute(source, "id");
+			for(Node node : animList){
+			
+				Matrix4f[] transforms = null;
+				int framecount = 0;
 				
-				//input node contains keyframe number and frames
-				if(sid.contains("input")){
-					Node frameNode = findChild(source.getChildNodes(), "float_array");
+				String id = getAttribute(node, "id").replace("Armature_", "").replace("_pose_matrix", "").replace("_",".");
+				
+				List<Node> animationSources = findChildren(node.getChildNodes(), "source");
+				
+				for(Node source : animationSources){
+					String sid = getAttribute(source, "id");
 					
-					framecount = Integer.parseInt(getAttribute(frameNode, "count"));
-					//get input
-					String sval = frameNode.getTextContent();
-					String[] keyf = sval.split(" ");
-					keyframes = new float[framecount];
-					
-					//new
-					if(keyframeData == null){
-						keyframeData = new float[framecount];
-					}
-					
-					for(int i = 0; i < keyf.length; i++){
-						keyframes[i] = (int)(24 * Float.parseFloat(keyf[i]));
-						keyframeData[i] = (int)(24 * Float.parseFloat(keyf[i]));//keep me
-					}
-				}
-				//output contains the actual transform matrices
-				else if(sid.contains("output")){
-					Node frameNode = findChild(source.getChildNodes(), "float_array");
-					
-					String sval = frameNode.getTextContent();
-					String[] mat = sval.split(" ");
-					transforms = new Matrix4f[framecount];
-					
-					FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
-					
-					for(int i = 0; i < mat.length;){	
-						buffer.put(Float.parseFloat(mat[i++])); //inc here to check mod against zero 
+					//input node contains keyframe number and frames
+					if(sid.contains("input")){
+						Node frameNode = findChild(source.getChildNodes(), "float_array");
 						
-						//after inserting 16 floats, rewind the buffer, and store it to a transpose matrix
-						if(i%16 == 0){
-							buffer.rewind();
-							
-							//i/16 - 1 <-- gross
-							transforms[i/16 - 1] = new Matrix4f();
-							transforms[i/16 - 1].loadTranspose(buffer);
-							
-							buffer.flip();
+						framecount = Integer.parseInt(getAttribute(frameNode, "count"));
+						//get input
+						String sval = frameNode.getTextContent();
+						String[] keyf = sval.split(" ");
+						keyframes = new float[framecount];
+						
+						//new
+						if(keyframeData == null){
+							keyframeData = new float[framecount];
 						}
-					}	
+						
+						for(int i = 0; i < keyf.length; i++){
+							keyframes[i] = (int)(24 * Float.parseFloat(keyf[i]));
+							keyframeData[i] = (int)(24 * Float.parseFloat(keyf[i]));//keep me
+						}
+					}
+					//output contains the actual transform matrices
+					else if(sid.contains("output")){
+						Node frameNode = findChild(source.getChildNodes(), "float_array");
+						
+						String sval = frameNode.getTextContent();
+						String[] mat = sval.split(" ");
+						transforms = new Matrix4f[framecount];
+						
+						FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+						
+						for(int i = 0; i < mat.length;){	
+							buffer.put(Float.parseFloat(mat[i++])); //inc here to check mod against zero 
+							
+							//after inserting 16 floats, rewind the buffer, and store it to a transpose matrix
+							if(i%16 == 0){
+								buffer.rewind();
+								
+								//i/16 - 1 <-- gross
+								transforms[i/16 - 1] = new Matrix4f();
+								transforms[i/16 - 1].loadTranspose(buffer);
+								
+								buffer.flip();
+							}
+						}	
+					}
+					else //if it's not input or output, we are done
+					{
+						continue;
+					}
+					
+					if(transforms == null || keyframes == null){
+						continue;
+					}
+					
+					
+					poses = new ArrayList<Pose>();
+					for(int i = 0; i <  framecount; i++){
+						poses.add(new Pose(keyframes[i], transforms[i]));
+					}
+	
+					animData.put(id, poses);
+					
 				}
-				else //if it's not input or output, we are done
-				{
-					continue;
-				}
-				
-				if(transforms == null || keyframes == null){
-					continue;
-				}
-				
-				
-				poses = new ArrayList<Pose>();
-				for(int i = 0; i <  framecount; i++){
-					poses.add(new Pose(keyframes[i], transforms[i]));
-				}
-
-				animData.put(id, poses);
-				
 			}
 			
+			animDataMap.put(animationNode.getPrefix(), animData);
+			//map of animData
 		}
+		
 		values.put("keyframes", keyframeData);
 		
 		//add the animation to the skeleton
-		Animation skelanim = new Animation(true, animData, keyframes);
-		skeleton.setAnim(skelanim);
+		List<Animation> animationList = new ArrayList<Animation>();
+		
+		for(Entry<String, Map<String, List<Pose>>> e : animDataMap.entrySet()){
+			Animation a = new Animation(true, e.getValue(), keyframes);
+			animationList.add(a);
+		}
+		
+		
+		skeleton.setAnims(animationList);
 		
 		
 		

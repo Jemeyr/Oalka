@@ -77,7 +77,7 @@ public class Model{
 	
 	public void draw(long time) {
 		
-		Map<String, Matrix4f> p = skeleton.getAnim().getPose(time);
+		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
 		
 		//recursively fill out the tree
 		pose(skeleton.root, p, null);
