@@ -5,14 +5,18 @@ import static org.lwjgl.opengl.GL20.glUniformMatrix4;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import skeleton.Animation;
 import skeleton.Bone;
 import skeleton.Skeleton;
 
@@ -74,13 +78,25 @@ public class Model{
 		
 	}
 	
+	private float hackVal = 0.0f;
 	
 	public void draw(long time) {
 		
 		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
+		Map<String, Matrix4f> q = skeleton.getAnims().get(1).getPose(time);
+	
+		if(Keyboard.isKeyDown(Keyboard.KEY_T)){
+			hackVal += hackVal >= 1.0f ? 0.0f : 0.01f;
+		}
+		if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
+			hackVal += hackVal <= 0.0f ? 0.0f : -0.01f;
+		}
+		System.out.println("blend constant: " + hackVal);
+		
+		Map<String, Matrix4f> r = blend(p, q, hackVal);
 		
 		//recursively fill out the tree
-		pose(skeleton.root, p, null);
+		pose(skeleton.root, r, null);
 		
 		
 		FloatBuffer skelebuf = GLOperations.generatePoseFloatBuffer(skeleton);
@@ -93,6 +109,20 @@ public class Model{
 
 		mesh.draw();
 	}
+
+	//blend two poses
+	private Map<String, Matrix4f> blend(Map<String, Matrix4f> a, Map<String, Matrix4f> b, float f) {
+		Map<String, Matrix4f> c = new HashMap<String, Matrix4f>();
+		
+		for(Entry<String, Matrix4f> e : a.entrySet()){
+			Matrix4f r = new Matrix4f();
+			r.load(Animation.matrixInterpolate(e.getValue(), b.get(e.getKey()), f));
+			c.put(e.getKey(), r);
+		}
+		
+		return c;
+	}
+
 
 	private void pose(Bone bone, Map<String, Matrix4f> pose, Matrix4f parent){
 		

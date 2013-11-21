@@ -127,7 +127,7 @@ public class Animation {
 	
 	//no news every pose, ugh
 	private static Matrix4f m = new Matrix4f();
-	private static Matrix4f matrixInterpolate(Matrix4f a, Matrix4f b, float interpolationStep){
+	public static Matrix4f matrixInterpolate(Matrix4f a, Matrix4f b, float interpolationStep){
 
 		m.setZero();
 		

@@ -40,7 +40,7 @@ public class Game {
 		String[] filenames = {"temp/skelet_both.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
-		root = renderMaster.addModel("temp/smoothatan.dae");
+		root = renderMaster.addModel("temp/skelet_both.dae");
 		Quaternion q = new Quaternion();
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
