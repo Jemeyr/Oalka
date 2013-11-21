@@ -1,0 +1,13 @@
+<something>
+<else>
+<library_animations>
+<animationset id=a.dae>
+<a.daevalues>
+</animationset>
+<animationset id=b.dae>
+<b.daevalues>
+</animationset>
+</library_animations>
+
+</else>
+</something>

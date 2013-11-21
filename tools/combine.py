@@ -44,7 +44,8 @@ for fname in toOpen:
 				else:
 					data = data + line			
 		data = data + "</animationset>\n"
-print("printing out " + sys.argv[1])
-print(prefix)
-print(data)
-print(suffix)
+
+with open(sys.argv[1],"w") as curr:
+	curr.write(prefix)
+	curr.write(data)
+	curr.write(suffix)
