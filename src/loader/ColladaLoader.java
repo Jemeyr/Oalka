@@ -164,7 +164,7 @@ public class ColladaLoader {
 		for(Node animationNode : animsetList){
 			
 			//get name
-			String animsetName;
+			String animsetName = getAttribute(animationNode, "id");
 			Map<String, List<Pose>> animData = new HashMap<String, List<Pose>>();
 			
 			List<Node> animList = findChildren(animationNode.getChildNodes(), "animation");
@@ -246,7 +246,7 @@ public class ColladaLoader {
 				}
 			}
 			
-			animDataMap.put(animationNode.getPrefix(), animData);
+			animDataMap.put(animsetName, animData);
 			//map of animData
 		}
 		
