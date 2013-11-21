@@ -37,7 +37,6 @@ public class Animation {
 	
 	private float interpolationStep = 0.0f;
 	
-	private boolean running = false;
 	private boolean cyclic = true;
 	
 	private int lastIndex = 0;
@@ -72,7 +71,6 @@ public class Animation {
 	public void start(long time){
 		this.lastTime = time;
 		this.interpolationStep = 0.0f;
-		this.running = true;
 	}
 
 	public Map<String, Matrix4f> getPose(long time){
@@ -83,7 +81,6 @@ public class Animation {
 		if(interpolationStep > 1.0f){
 			
 			if(!cyclic){
-				running = false;
 				lastIndex = 0;
 				nextIndex = 1;
 			}
@@ -124,6 +121,12 @@ public class Animation {
 	}
 	
 	
+	private static float interpolate(float a, float as, float b, float bs){
+		double aca = Math.acos(a);
+		double acb = Math.acos(b);
+		
+		return (float)Math.cos(aca*as+acb*bs);
+	}
 	
 	//no news every pose, ugh
 	private static Matrix4f m = new Matrix4f();
@@ -134,10 +137,40 @@ public class Animation {
 		float inverseStep = 1.00f - interpolationStep;
 
 		//LERPING MATRICES COMPONENT-WISE IS GREAT! AW YEAH
-		m.m00 = a.m00 * inverseStep + b.m00 * interpolationStep;	m.m01 = a.m01 * inverseStep + b.m01 * interpolationStep;	m.m02 = a.m02 * inverseStep + b.m02 * interpolationStep;	m.m03 = a.m03 * inverseStep + b.m03 * interpolationStep;
-		m.m10 = a.m10 * inverseStep + b.m10 * interpolationStep;	m.m11 = a.m11 * inverseStep + b.m11 * interpolationStep;	m.m12 = a.m12 * inverseStep + b.m12 * interpolationStep;	m.m13 = a.m13 * inverseStep + b.m13 * interpolationStep;
-		m.m20 = a.m20 * inverseStep + b.m20 * interpolationStep;	m.m21 = a.m21 * inverseStep + b.m21 * interpolationStep;	m.m22 = a.m22 * inverseStep+ b.m22 * interpolationStep;	m.m23 = a.m23 * inverseStep + b.m23 * interpolationStep;
-		m.m30 = a.m30 * inverseStep + b.m30 * interpolationStep;	m.m31 = a.m31 * inverseStep + b.m31 * interpolationStep;	m.m32 = a.m32 * inverseStep + b.m32 * interpolationStep;	m.m33 = a.m33 * inverseStep + b.m33 * interpolationStep;
+		m.m00 = interpolate(a.m00, inverseStep, b.m00, interpolationStep);
+		m.m01 = interpolate(a.m01, inverseStep, b.m01, interpolationStep);
+		m.m02 = interpolate(a.m02, inverseStep, b.m02, interpolationStep);
+		m.m03 = interpolate(a.m03, inverseStep, b.m03, interpolationStep);
+
+		m.m10 = interpolate(a.m10, inverseStep, b.m10, interpolationStep);
+		m.m11 = interpolate(a.m11, inverseStep, b.m11, interpolationStep);
+		m.m12 = interpolate(a.m12, inverseStep, b.m12, interpolationStep);
+		m.m13 = interpolate(a.m13, inverseStep, b.m13, interpolationStep);
+
+		m.m20 = interpolate(a.m20, inverseStep, b.m20, interpolationStep);
+		m.m21 = interpolate(a.m21, inverseStep, b.m21, interpolationStep);
+		m.m22 = interpolate(a.m22, inverseStep, b.m22, interpolationStep);
+		m.m23 = interpolate(a.m23, inverseStep, b.m23, interpolationStep);
+
+		m.m33 = interpolate(a.m33, inverseStep, b.m33, interpolationStep);
+		
+		//interpolate angularly
+		double api = Math.atan2(a.m30,a.m31);
+		double atheta = Math.atan2(a.m32,api);
+		double ar2 = (double)(a.m30*a.m30 + a.m31*a.m31 + a.m32*a.m32);
+		
+		double bpi = Math.atan2(b.m30,b.m31);
+		double btheta = Math.atan2(b.m32,bpi);
+		double br2 = (double)(b.m30*b.m30 + b.m31*b.m31 + b.m32*b.m32);
+		
+		
+		double mpi = api * inverseStep + bpi * interpolationStep;
+		double mtheta = atheta * inverseStep + btheta * interpolationStep;
+		double mr = Math.sqrt(ar2) * inverseStep + Math.sqrt(br2) * interpolationStep;
+		
+		m.m32 = (float)(mpi * Math.tan(mtheta));
+		m.m31 = (float)(mr * Math.cos(mpi));
+		m.m30 = (float)(mr * Math.sin(mpi));
 
 		return m;
 	}
