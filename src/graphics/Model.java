@@ -83,7 +83,7 @@ public class Model{
 	public void draw(long time) {
 		
 		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
-		Map<String, Matrix4f> q = skeleton.getAnims().get(1).getPose(time);
+		Map<String, Matrix4f> q = skeleton.getAnims().get(0).getPose(time);
 	
 		if(Keyboard.isKeyDown(Keyboard.KEY_T)){
 			hackVal += hackVal >= 1.0f ? 0.0f : 0.01f;

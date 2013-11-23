@@ -33,7 +33,7 @@ data = ""
 for fname in toOpen:
 	with open(fname) as curr:
 		state = 1
-		data = data + "<animationset id=\"" + re.sub("\\.\\/","",str(fname)) + "\">\n"
+		data = data + "<animationset id=\"" + re.sub(".+/","",str(fname)) + "\">\n"
 		for line in curr:
 			if(state == 1):
 				if("library_animation" in line):
