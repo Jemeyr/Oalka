@@ -1,7 +1,5 @@
 package loader;
 
-import game.Game;
-
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -335,9 +333,6 @@ public class ColladaLoader {
 				}
 			}
 		}
-		
-		Game.bindPoses = bindPoses;
-		Game.joints = joints;
 		
 		List<Integer> v = new ArrayList<Integer>();
 		List<Integer> vcount = new ArrayList<Integer>();

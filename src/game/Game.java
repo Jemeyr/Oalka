@@ -5,11 +5,8 @@ import graphics.Camera;
 import graphics.Model;
 import graphics.RenderMaster;
 
-import java.util.List;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -20,10 +17,6 @@ public class Game {
 	public static int frames;
 	
 	public static Model root;
-	
-	public static List<Matrix4f> bindPoses;
-	public static List<String> joints;
-
 	
 	public static void main(String[] args)
 	{
@@ -37,20 +30,23 @@ public class Game {
 		float fov = 90.0f;
 		
 		
-		String[] filenames = {"temp/skelet_both.dae", "temp/batan.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/batan.dae", "temp/skelet_both.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
-		root = renderMaster.addModel("temp/skelet_both.dae");
 		Quaternion q = new Quaternion();
+		
+		Model baton = renderMaster.addModel("temp/batan.dae");
+		q.setFromAxisAngle(new Vector4f(0.0f, 1.0f, 0.0f, -(float)Math.PI/2.0f));
+		baton.addPosition(new Vector3f(-5.0f, 3.0f, 0.0f));
+		baton.addRotation(q);
+		
+		q = new Quaternion();
+		root = renderMaster.addModel("temp/skelet_both.dae");
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
 		
-		Model baton = renderMaster.addModel("temp/batan.dae");
-		q.setFromAxisAngle(new Vector4f(0.0f, 1.0f, 0.0f, -(float)Math.PI/2.0f));
-		baton.addPosition(new Vector3f(0.0f, 3.0f, 0.0f));
-		baton.addRotation(q);
 		
 		root.addChild(baton);
 		

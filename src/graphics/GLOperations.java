@@ -66,7 +66,7 @@ public class GLOperations {
 		
 		return fbuf;
 	}
-	
+
 	public static FloatBuffer generateInverseBindFloatBuffer(Skeleton skeleton){
 		FloatBuffer fbuf = BufferUtils.createFloatBuffer((skeleton.bones.size() - 1) * 16); //all bones minus root * 16 for |matrix|
 		

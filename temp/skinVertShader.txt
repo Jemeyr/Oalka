@@ -35,7 +35,7 @@ void main(){
  	}
  	outpos = comp * pos;
 
-	fragNorm = (vec4(comp * vec4(fragNorm, 0.0))).xyz;
+	fragNorm = (vec4((comp * model) * vec4(fragNorm, 0.0))).xyz;
 	
 	gl_Position = viewPerspective * model * outpos;
 }

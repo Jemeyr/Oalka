@@ -111,7 +111,7 @@ public class Model{
 		
 		FloatBuffer skelebuf = GLOperations.generatePoseFloatBuffer(skeleton);
 		glUniformMatrix4(skeletonUniform, true, skelebuf);
-	
+		
 		
 		glUniformMatrix4(modelUniform, false, GLOperations.generateFloatBuffer(this.model));		
 		
