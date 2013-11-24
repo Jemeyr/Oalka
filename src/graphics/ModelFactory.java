@@ -7,12 +7,13 @@ import loader.ColladaLoader;
 public class ModelFactory {
 	
 	private Shader skinnedShader;
-	
+	private RenderMaster renderMaster;
 	
 	private HashMap<String, Mesh> loadedMeshes;
 	
-	public ModelFactory(Shader skinnedShader)
+	public ModelFactory(Shader skinnedShader, RenderMaster renderMaster)
 	{
+		this.renderMaster = renderMaster;
 		this.skinnedShader = skinnedShader;
 		this.loadedMeshes = new HashMap<String, Mesh>();
 	}
@@ -27,7 +28,7 @@ public class ModelFactory {
 		
 		Mesh m = loadedMeshes.get(filename);
 
-		return new Model(m, this.skinnedShader);
+		return new Model(m, this.skinnedShader, this.renderMaster);
 	}
 	
 	public void loadModel(String filename)

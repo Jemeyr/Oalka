@@ -41,7 +41,7 @@ public class RenderMaster{
 		
 		skinnedShader = new Shader(skinnedFragShader, skinnedVertexShader);
 		
-		modelFactory = new ModelFactory(skinnedShader);
+		modelFactory = new ModelFactory(skinnedShader, this);
 		models = new ArrayList<Model>();
 		
 		List<Shader> shaders = new ArrayList<Shader>();

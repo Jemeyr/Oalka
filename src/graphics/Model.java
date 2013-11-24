@@ -4,9 +4,7 @@ import static org.lwjgl.opengl.GL20.glUniform3f;
 import static org.lwjgl.opengl.GL20.glUniformMatrix4;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -22,10 +20,12 @@ import skeleton.Skeleton;
 
 public class Model{
 
+	private RenderMaster renderMaster;
+	
 	protected Mesh mesh;
 	
 	private Model parent;
-	private List<Model> children;
+	private Map<Model, Bone> children;
 	
 	public float[] col;
 	private int colorUniform;
@@ -43,12 +43,14 @@ public class Model{
 	private int inverseBindUniform;
 	private int skeletonUniform;
 	
-	protected Model(Mesh mesh, Shader shader)
+	protected Model(Mesh mesh, Shader shader, RenderMaster renderMaster)
 	{	
+		this.renderMaster = renderMaster;
+		
 		this.colorUniform = shader.getUniforms().get("color");
 		this.modelUniform = shader.getUniforms().get("model");
 
-		this.children = new ArrayList<Model>();
+		this.children = new HashMap<Model,Bone>();
 		
 		this.mesh = mesh;
 		
@@ -91,7 +93,7 @@ public class Model{
 		if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
 			hackVal += hackVal <= 0.0f ? 0.0f : -0.01f;
 		}
-		System.out.println("blend constant: " + hackVal);
+//		System.out.println("blend constant: " + hackVal);
 		
 		Map<String, Matrix4f> r = blend(p, q, hackVal);
 		
@@ -103,7 +105,41 @@ public class Model{
 		glUniformMatrix4(skeletonUniform, true, skelebuf);
 	
 		
-		glUniformMatrix4(modelUniform, false, GLOperations.generateFloatBuffer(model));		
+		glUniformMatrix4(modelUniform, false, GLOperations.generateFloatBuffer(this.model));		
+		
+		glUniform3f(colorUniform, col[0], col[1], col[2]);
+
+		mesh.draw();
+		
+		//draw all children after to ensure update has occurred on parent first	
+		for(Entry<Model, Bone> child : this.children.entrySet()){
+			Matrix4f prt = new Matrix4f();
+			Matrix4f.mul(this.model, skeleton.bones.get(child.getValue().name).transform, prt);
+			
+			child.getKey().draw(time, prt);
+		}
+		
+	}
+	
+
+	public void draw(long time, Matrix4f parent) {
+		
+		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
+		Map<String, Matrix4f> q = skeleton.getAnims().get(0).getPose(time);
+		
+		Map<String, Matrix4f> r = blend(p, q, hackVal);
+		
+		//recursively fill out the tree
+		pose(skeleton.root, r, null);
+		
+		
+		FloatBuffer skelebuf = GLOperations.generatePoseFloatBuffer(skeleton);
+		glUniformMatrix4(skeletonUniform, true, skelebuf);
+	
+		Matrix4f modelTransform = new Matrix4f();
+		Matrix4f.mul(parent, this.model, modelTransform);
+		
+		glUniformMatrix4(modelUniform, false, GLOperations.generateFloatBuffer(modelTransform));		
 		
 		glUniform3f(colorUniform, col[0], col[1], col[2]);
 
@@ -138,12 +174,15 @@ public class Model{
 	
 	
 	public void addChild(Model model) {
-		// This should add it to a bone in particular! YEAH
-		this.children.add(model);
+		this.children.put(model, this.skeleton.bones.get("Forearm.l"));
+		
+		//removes from toplevel models
+		renderMaster.models.remove(model);
 		
 	}
 
 	public void removeChild(Model model) {
+		renderMaster.models.add(model);
 		this.children.remove(model);
 	}
 	

@@ -37,23 +37,22 @@ public class Game {
 		float fov = 90.0f;
 		
 		
-		String[] filenames = {"temp/batan.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/skelet_both.dae", "temp/batan.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
-		root = renderMaster.addModel("temp/batan.dae");
+		root = renderMaster.addModel("temp/skelet_both.dae");
 		Quaternion q = new Quaternion();
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
 		
-//		for(int i = 0; i < 5; i++){
-//			for(int j = 0; j < 5; j++){
-//				root = renderMaster.addModel("temp/smoothatan.dae");
-//				root.addPosition(new Vector3f(-50.f + 20.f*j, -5.0f, -25.f + 10.f * i));
-//				root.addRotation(q);		
-//			}
-//		}
+		Model baton = renderMaster.addModel("temp/skelet_both.dae");
+		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
+		baton.addPosition(new Vector3f(0.0f, 0.0f, 0.0f));
+		baton.addRotation(q);
+		
+		root.addChild(baton);
 		
 
 		while(!Display.isCloseRequested())
