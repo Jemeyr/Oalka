@@ -85,7 +85,15 @@ public class Model{
 	public void draw(long time) {
 		
 		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
-		Map<String, Matrix4f> q = skeleton.getAnims().get(0).getPose(time);
+		Map<String, Matrix4f> q = null;
+		
+		if(skeleton.getAnims().size() > 1){
+			q = skeleton.getAnims().get(1).getPose(time);
+		}
+		else
+		{
+			q = p;
+		}
 	
 		if(Keyboard.isKeyDown(Keyboard.KEY_T)){
 			hackVal += hackVal >= 1.0f ? 0.0f : 0.01f;
@@ -93,7 +101,7 @@ public class Model{
 		if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
 			hackVal += hackVal <= 0.0f ? 0.0f : -0.01f;
 		}
-//		System.out.println("blend constant: " + hackVal);
+		System.out.println("blend constant: " + hackVal);
 		
 		Map<String, Matrix4f> r = blend(p, q, hackVal);
 		

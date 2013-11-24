@@ -91,7 +91,7 @@ public class Animation {
 			}
 			
 			interpolationStep = 0.0f;
-			System.out.println("interpolating from " + lastIndex + " to " + nextIndex);
+			//System.out.println("interpolating from " + lastIndex + " to " + nextIndex);
 			
 		}
 		

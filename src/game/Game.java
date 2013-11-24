@@ -47,9 +47,9 @@ public class Game {
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
 		
-		Model baton = renderMaster.addModel("temp/skelet_both.dae");
-		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
-		baton.addPosition(new Vector3f(0.0f, 0.0f, 0.0f));
+		Model baton = renderMaster.addModel("temp/batan.dae");
+		q.setFromAxisAngle(new Vector4f(0.0f, 1.0f, 0.0f, -(float)Math.PI/2.0f));
+		baton.addPosition(new Vector3f(0.0f, 3.0f, 0.0f));
 		baton.addRotation(q);
 		
 		root.addChild(baton);
