@@ -174,6 +174,52 @@ public class Animation {
 
 		return m;
 	}
+
+	
+	public static void matrixFinalize(Matrix4f m){
+		m.m00 = (float)Math.sin(m.m00);
+		m.m01 = (float)Math.sin(m.m01);
+		m.m02 = (float)Math.sin(m.m02);
+		m.m03 = (float)Math.sin(m.m03);
+		
+		m.m10 = (float)Math.sin(m.m10);
+		m.m11 = (float)Math.sin(m.m11);
+		m.m12 = (float)Math.sin(m.m12);
+		m.m13 = (float)Math.sin(m.m13);
+		
+		m.m20 = (float)Math.sin(m.m20);
+		m.m21 = (float)Math.sin(m.m21);
+		m.m22 = (float)Math.sin(m.m22);
+		m.m23 = (float)Math.sin(m.m23);
+		
+		m.m33 = (float)Math.sin(m.m33);
+		
+	}
+
+	public static void matrixAccumulate(Matrix4f sum, Matrix4f value, Float weight) {
+		//added asin, later must be sined
+		sum.m00 += Math.asin(value.m00) * weight;
+		sum.m01 += Math.asin(value.m01) * weight;
+		sum.m02 += Math.asin(value.m02) * weight;
+		sum.m03 += Math.asin(value.m03) * weight;
+		
+		sum.m10 += Math.asin(value.m10) * weight;
+		sum.m11 += Math.asin(value.m11) * weight;
+		sum.m12 += Math.asin(value.m12) * weight;
+		sum.m13 += Math.asin(value.m13) * weight;
+		
+		sum.m20 += Math.asin(value.m20) * weight;
+		sum.m21 += Math.asin(value.m21) * weight;
+		sum.m22 += Math.asin(value.m22) * weight;
+		sum.m23 += Math.asin(value.m23) * weight;
+		
+		sum.m33 += Math.asin(value.m33) * weight;
+		
+		//added normally
+		sum.m30 += value.m30 * weight;
+		sum.m31 += value.m31 * weight;
+		sum.m32 += value.m32 * weight;
+	}
 	
 	
 

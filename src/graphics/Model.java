@@ -27,6 +27,8 @@ public class Model{
 	private Model parent;
 	private Map<Model, Bone> children;
 	
+	private Map<Animation, Float> animWeights;
+	
 	public float[] col;
 	private int colorUniform;
 	
@@ -46,6 +48,7 @@ public class Model{
 	protected Model(Mesh mesh, Shader shader, RenderMaster renderMaster)
 	{	
 		this.renderMaster = renderMaster;
+		
 		
 		this.colorUniform = shader.getUniforms().get("color");
 		this.modelUniform = shader.getUniforms().get("model");
@@ -78,32 +81,32 @@ public class Model{
 		FloatBuffer skelebuf = GLOperations.generatePoseFloatBuffer(skeleton);
 		glUniformMatrix4(skeletonUniform, true, skelebuf);
 		
+
+		this.animWeights = new HashMap<Animation, Float>();
+		//fill out animWeights
+		for(Animation a : skeleton.getAnims())
+		{
+			this.animWeights.put(a, 1.0f / skeleton.getAnims().size());
+		}
+		
+		
+		
 	}
 	
 	private float hackVal = 0.0f;
 	
 	public void draw(long time) {
-		
-		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
-		Map<String, Matrix4f> q = null;
-		
-		if(skeleton.getAnims().size() > 1){
-			q = skeleton.getAnims().get(1).getPose(time);
-		}
-		else
-		{
-			q = p;
-		}
 	
 		if(Keyboard.isKeyDown(Keyboard.KEY_T)){
-			hackVal += hackVal >= 1.0f ? 0.0f : 0.01f;
+			hackVal += 0.01f;
 		}
 		if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
-			hackVal += hackVal <= 0.0f ? 0.0f : -0.01f;
+			hackVal += -0.01f;
 		}
-		System.out.println("blend constant: " + hackVal);
+		hackVal = hackVal >= 1.0f ? 1.0f : hackVal <= 0.0f ? 0.0f : hackVal;
 		
-		Map<String, Matrix4f> r = blend(p, q, hackVal);
+		
+		Map<String, Matrix4f> r = blend(animWeights, time);
 		
 		//recursively fill out the tree
 		pose(skeleton.root, r, null);
@@ -167,7 +170,33 @@ public class Model{
 		return c;
 	}
 
+	private Map<String, Matrix4f> blend(Map<Animation, Float> animWeights, long time){
+		Map<String, Matrix4f> c = new HashMap<String, Matrix4f>();
 
+		
+		for(Entry<Animation,Float> anim : animWeights.entrySet()){
+			for(Entry <String, Matrix4f> e : anim.getKey().getPose(time).entrySet()) {
+				
+				if(!c.containsKey(e.getKey())){
+					Matrix4f m = new Matrix4f(); m.setZero();
+					Animation.matrixAccumulate(m, e.getValue(), anim.getValue());
+					c.put(e.getKey(), m);
+				}
+				else{
+					Animation.matrixAccumulate(c.get(e.getKey()), e.getValue(), anim.getValue());
+				}
+			}
+		}
+		
+		for(Entry<String, Matrix4f> e : c.entrySet()){
+			Animation.matrixFinalize(e.getValue());
+		}
+		
+		return c;
+	}
+	
+	
+	
 	private void pose(Bone bone, Map<String, Matrix4f> pose, Matrix4f parent){
 		
 		for(Bone b : bone.children){
