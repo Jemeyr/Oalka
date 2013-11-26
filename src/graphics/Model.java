@@ -135,10 +135,11 @@ public class Model{
 
 	public void draw(long time, Matrix4f parent) {
 		
-		Map<String, Matrix4f> p = skeleton.getAnims().get(0).getPose(time);
-		Map<String, Matrix4f> q = skeleton.getAnims().get(0).getPose(time);
+
+		Map<String, Matrix4f> r = blend(animWeights, time);
 		
-		Map<String, Matrix4f> r = blend(p, q, hackVal);
+		//recursively fill out the tree
+		pose(skeleton.root, r, null);
 		
 		//recursively fill out the tree
 		pose(skeleton.root, r, null);
@@ -155,19 +156,6 @@ public class Model{
 		glUniform3f(colorUniform, col[0], col[1], col[2]);
 
 		mesh.draw();
-	}
-
-	//blend two poses
-	private Map<String, Matrix4f> blend(Map<String, Matrix4f> a, Map<String, Matrix4f> b, float f) {
-		Map<String, Matrix4f> c = new HashMap<String, Matrix4f>();
-		
-		for(Entry<String, Matrix4f> e : a.entrySet()){
-			Matrix4f r = new Matrix4f();
-			r.load(Animation.matrixInterpolate(e.getValue(), b.get(e.getKey()), f));
-			c.put(e.getKey(), r);
-		}
-		
-		return c;
 	}
 
 	private Map<String, Matrix4f> blend(Map<Animation, Float> animWeights, long time){
