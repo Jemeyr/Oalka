@@ -30,18 +30,18 @@ public class Game {
 		float fov = 90.0f;
 		
 		
-		String[] filenames = {"temp/batan.dae", "temp/skelet_both.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/batan.dae", "temp/dude.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
 		Quaternion q = new Quaternion();
 		
 		Model baton = renderMaster.addModel("temp/batan.dae");
 		q.setFromAxisAngle(new Vector4f(0.0f, 1.0f, 0.0f, -(float)Math.PI/2.0f));
-		baton.addPosition(new Vector3f(-5.0f, 3.0f, 0.0f));
+		baton.addPosition(new Vector3f(-8.0f, 2.0f, 0.0f));
 		baton.addRotation(q);
 		
 		q = new Quaternion();
-		root = renderMaster.addModel("temp/skelet_both.dae");
+		root = renderMaster.addModel("temp/dude.dae");
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));

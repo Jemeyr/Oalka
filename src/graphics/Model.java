@@ -211,7 +211,7 @@ public class Model{
 	
 	
 	public void addChild(Model model) {
-		this.children.put(model, this.skeleton.bones.get("Forearm.l"));
+		this.children.put(model, this.skeleton.bones.get("ForeArm.L"));
 		
 		//removes from toplevel models
 		renderMaster.models.remove(model);
