@@ -94,17 +94,47 @@ public class Model{
 		
 	}
 	
-	private float hackVal = 0.0f;
+	private void setWeights(float[] weights){
+		int i = 0;
+		Map<Animation, Float> aWeights = new HashMap<Animation, Float>();
+		float left = 1.0f;
+		Animation last = null;
+		
+		for(Entry<Animation, Float> e : animWeights.entrySet()){
+			last = e.getKey();
+			left -= weights[i];
+			aWeights.put(e.getKey(), weights[i++]);
+		}
+		
+		//add any remaining weight to last one.
+		aWeights.put(last, aWeights.get(last) + left);
+		
+		this.animWeights = aWeights;
+	}
 	
+	private float[] aw = {1.0f, 0.0f, 0.0f};
+		
 	public void draw(long time) {
 	
 		if(Keyboard.isKeyDown(Keyboard.KEY_T)){
-			hackVal += 0.01f;
+			aw[0] = 1.0f;
+			aw[1] = 0.0f;
+			aw[2] = 0.0f;
 		}
-		if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
-			hackVal += -0.01f;
+		else if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
+			aw[0] = 0.0f;
+			aw[1] = 1.0f;
+			aw[2] = 0.0f;
 		}
-		hackVal = hackVal >= 1.0f ? 1.0f : hackVal <= 0.0f ? 0.0f : hackVal;
+		else if(Keyboard.isKeyDown(Keyboard.KEY_U)){
+			aw[0] = 0.0f;
+			aw[1] = 0.0f;
+			aw[2] = 1.0f;
+		}
+		
+		setWeights(aw);
+		
+		
 		
 		
 		Map<String, Matrix4f> r = blend(animWeights, time);
@@ -199,8 +229,8 @@ public class Model{
 
 	
 	
-	public void addChild(Model model) {
-		this.children.put(model, this.skeleton.bones.get("ForeArm.L"));
+	public void addChild(Model model, String boneName) {
+		this.children.put(model, this.skeleton.bones.get(boneName));
 		
 		//removes from toplevel models
 		renderMaster.models.remove(model);

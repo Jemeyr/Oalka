@@ -48,9 +48,10 @@ public class Game {
 		root.addRotation(q);
 		
 		
-		root.addChild(baton);
 
 		float speed = 0.01f;
+		
+		boolean holdBaton = false;
 
 		while(!Display.isCloseRequested())
 		{
@@ -103,6 +104,11 @@ public class Game {
 				speed = 0.01f;
 			}
 
+
+			if(Keyboard.isKeyDown(Keyboard.KEY_Z) && !holdBaton){
+				root.addChild(baton, "ForeArm.L");
+				holdBaton = true;
+			}
 			
 			
 			lent = 30f / (float)Math.atan(fov * 0.0349066);
