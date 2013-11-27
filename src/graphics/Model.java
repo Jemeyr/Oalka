@@ -131,7 +131,29 @@ public class Model{
 			aw[1] = 0.0f;
 			aw[2] = 1.0f;
 		}
+		else if(Keyboard.isKeyDown(Keyboard.KEY_G) && aw[0] < 1.0f){
+			float s = 1.0f - aw[0];
+			aw[0] += 0.01f;
+			aw[1] -= 0.01f * aw[1]/s;
+			aw[2] -= 0.01f * aw[2]/s;
+		}
+		else if(Keyboard.isKeyDown(Keyboard.KEY_H) && aw[1] < 1.0f){
+			float s = 1.0f - aw[1];
+			aw[0] -= 0.01f * aw[0]/s;
+			aw[1] += 0.01f;
+			aw[2] -= 0.01f * aw[2]/s;
+		}
+		else if(Keyboard.isKeyDown(Keyboard.KEY_J) && aw[2] < 1.0f){
+			float s = 1.0f - aw[2];
+			aw[0] -= 0.01f * aw[0]/s;
+			aw[1] -= 0.01f * aw[1]/s;		
+			aw[2] += 0.01f;
+		}
+		aw[0] = aw[0] < 0.001f ? 0.0f : aw[0] > 1.0f ? 1.0f : aw[0];
+		aw[1] = aw[1] < 0.001f ? 0.0f : aw[1] > 1.0f ? 1.0f : aw[1];
+		aw[2] = aw[2] < 0.001f ? 0.0f : aw[2] > 1.0f ? 1.0f : aw[2];
 		
+		System.out.println((int)(100*aw[0]) + " " + (int)(100*aw[1]) + " " + (int)(100*aw[2]));
 		setWeights(aw);
 		
 		
@@ -305,6 +327,8 @@ public class Model{
 		calculateModelMatrix();
 	}
 	
-	
+	public Vector3f getPosition(){
+		return new Vector3f(this.position);
+	}
 
 }

@@ -27,7 +27,6 @@ public class Game {
 		float rotation = 0.0f;
 		float height = 0.0f;
 		float lent = 15.0f;
-		float fov = 90.0f;
 		
 		
 		String[] filenames = {"temp/batan.dae", "temp/dude.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
@@ -67,15 +66,19 @@ public class Game {
 			}else if(Keyboard.isKeyDown(Keyboard.KEY_LEFT))
 			{
 				rotation -= 0.03f;
-			}
-			
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP))
+			}else if(Keyboard.isKeyDown(Keyboard.KEY_UP))
 			{
 				height += 0.5f;	
 				
 			}else if(Keyboard.isKeyDown(Keyboard.KEY_DOWN))
 			{
 				height -= 0.5f;
+			}else if(Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+			{
+				lent = lent > 0 ? lent - 0.5f : 0.0f;
+			}else if(Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))
+			{
+				lent += 0.5f;
 			}
 			
 			
@@ -110,13 +113,14 @@ public class Game {
 				tscale *= 0.99f;
 			}
 			
-			
-			lent = 30f / (float)Math.atan(fov * 0.0349066);
-			
+		
 			camera.setPosition(new Vector3f(lent * (float)Math.sin(rotation), 
 											height, 
 											lent * (float)Math.cos(rotation)));
 			
+			if(Keyboard.isKeyDown(Keyboard.KEY_X)){
+				camera.setTarget(root.getPosition());
+			}
 			
 			renderMaster.render(tscale);
 			

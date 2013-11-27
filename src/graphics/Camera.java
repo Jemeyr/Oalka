@@ -61,6 +61,12 @@ public class Camera {
 		update(shader);
 	}
 	
+	public void setTarget(Vector3f newTar)
+	{
+		dirty = true;
+		target = newTar;
+	}
+	
 	public void setPosition(Vector3f newPos)
 	{
 		dirty = true;
