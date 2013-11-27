@@ -194,6 +194,15 @@ public class Animation {
 		
 		m.m33 = (float)Math.sin(m.m33);
 		
+		//convert polar to cartesian
+		float pi = m.m30;
+		float theta = m.m31;
+		float r = m.m32;
+
+		m.m32 = (float)(pi * Math.tan(theta));
+		m.m31 = (float)(r * Math.cos(pi));
+		m.m30 = (float)(r * Math.sin(pi));
+		
 	}
 
 	public static void matrixAccumulate(Matrix4f sum, Matrix4f value, Float weight) {
@@ -215,10 +224,14 @@ public class Animation {
 		
 		sum.m33 += Math.asin(value.m33) * weight;
 		
-		//added normally
-		sum.m30 += value.m30 * weight;
-		sum.m31 += value.m31 * weight;
-		sum.m32 += value.m32 * weight;
+		//store pi/theta/r instead to fix in finalize
+		double pi = Math.atan2(value.m30,value.m31);
+		double theta = Math.atan2(value.m32,pi) * 0.9999;//prevent float errors from accumulating too high, causes twitching
+		double r = Math.sqrt(value.m30*value.m30 + value.m31*value.m31 + value.m32*value.m32);
+		
+		sum.m30 += pi * weight;
+		sum.m31 += theta * weight;
+		sum.m32 = (float)r;
 	}
 	
 	

@@ -49,7 +49,8 @@ public class Game {
 		
 		
 		root.addChild(baton);
-		
+
+		float speed = 0.01f;
 
 		while(!Display.isCloseRequested())
 		{
@@ -79,19 +80,27 @@ public class Game {
 			
 			if(Keyboard.isKeyDown(Keyboard.KEY_W))
 			{
-				root.addPosition(new Vector3f(0.0f, 0.0f, 0.1f));				
+				root.addPosition(new Vector3f(0.0f, 0.0f, speed));				
 			}
 			else if(Keyboard.isKeyDown(Keyboard.KEY_S))
 			{
-				root.addPosition(new Vector3f(0.0f, 0.0f, -0.1f));	
+				root.addPosition(new Vector3f(0.0f, 0.0f, -speed));	
 			}
 			if(Keyboard.isKeyDown(Keyboard.KEY_D))
 			{
-				root.addPosition(new Vector3f(-0.1f, 0.0f, 0.0f));
+				root.addPosition(new Vector3f(-speed, 0.0f, 0.0f));
 			}
 			else if(Keyboard.isKeyDown(Keyboard.KEY_A))
 			{
-				root.addPosition(new Vector3f(0.1f, 0.0f, 0.0f));
+				root.addPosition(new Vector3f(speed, 0.0f, 0.0f));
+			}
+			
+			if(Keyboard.isKeyDown(Keyboard.KEY_N)){
+				speed = 0.2f;
+			}
+			else
+			{
+				speed = 0.01f;
 			}
 
 			

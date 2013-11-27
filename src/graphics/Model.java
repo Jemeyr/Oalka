@@ -84,9 +84,10 @@ public class Model{
 
 		this.animWeights = new HashMap<Animation, Float>();
 		//fill out animWeights
+		
 		for(Animation a : skeleton.getAnims())
 		{
-			this.animWeights.put(a, 1.0f / skeleton.getAnims().size());
+			this.animWeights.put(a, 1.0f / skeleton.getAnims().size());			
 		}
 		
 		
