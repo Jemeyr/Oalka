@@ -49,9 +49,16 @@ public class RenderMaster{
 		camera = new Camera(shaders);
 	}
 
-	
-	public void render() {
+	long lastTime = System.currentTimeMillis();
+	long extraTime = 0;
+	public void render(float tscale) {
 		long time = System.currentTimeMillis();
+		
+		extraTime += (long)((time - lastTime) * (tscale - 1.0f));
+		lastTime = time;
+		
+
+		time += extraTime;
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		

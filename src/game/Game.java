@@ -47,9 +47,9 @@ public class Game {
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));
 		root.addRotation(q);
 		
-		
+		float tscale = 1.0f;
 
-		float speed = 0.01f;
+		float speed = 0.05f;
 		
 		boolean holdBaton = false;
 
@@ -96,18 +96,18 @@ public class Game {
 				root.addPosition(new Vector3f(speed, 0.0f, 0.0f));
 			}
 			
-			if(Keyboard.isKeyDown(Keyboard.KEY_N)){
-				speed = 0.2f;
-			}
-			else
-			{
-				speed = 0.01f;
-			}
 
 
 			if(Keyboard.isKeyDown(Keyboard.KEY_Z) && !holdBaton){
 				root.addChild(baton, "ForeArm.L");
 				holdBaton = true;
+			}
+			
+			if(Keyboard.isKeyDown(Keyboard.KEY_R)){
+				tscale *= 1.01f;
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_F)){
+				tscale *= 0.99f;
 			}
 			
 			
@@ -118,7 +118,7 @@ public class Game {
 											lent * (float)Math.cos(rotation)));
 			
 			
-			renderMaster.render();
+			renderMaster.render(tscale);
 			
 		}
 
