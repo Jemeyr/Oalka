@@ -29,7 +29,7 @@ public class Game {
 		float lent = 15.0f;
 		
 		
-		String[] filenames = {"temp/batan.dae", "temp/dude.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
+		String[] filenames = {"temp/batan.dae", "temp/dude2.dae"};//"temp/skeletan.dae", "temp/werman.dae", "temp/tt.dae", "temp/two.dae"};
 		renderMaster.loadMeshes(filenames);
 		
 		Quaternion q = new Quaternion();
@@ -40,7 +40,7 @@ public class Game {
 		baton.addRotation(q);
 		
 		q = new Quaternion();
-		root = renderMaster.addModel("temp/dude.dae");
+		root = renderMaster.addModel("temp/dude2.dae");
 		q.setFromAxisAngle(new Vector4f(1.0f, 0.0f, 0.0f, -(float)Math.PI/2.0f));
 		
 		root.addPosition(new Vector3f(0.0f, -5.0f, 0.0f));

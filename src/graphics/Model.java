@@ -112,7 +112,7 @@ public class Model{
 		this.animWeights = aWeights;
 	}
 	
-	private float[] aw = {1.0f, 0.0f, 0.0f};
+	private float[] aw = {1.0f, 0.0f, 0.0f, 0.0f};
 		
 	public void draw(long time) {
 	
@@ -120,40 +120,61 @@ public class Model{
 			aw[0] = 1.0f;
 			aw[1] = 0.0f;
 			aw[2] = 0.0f;
+			aw[3] = 0.0f;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_Y)){
 			aw[0] = 0.0f;
 			aw[1] = 1.0f;
 			aw[2] = 0.0f;
+			aw[3] = 0.0f;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_U)){
 			aw[0] = 0.0f;
 			aw[1] = 0.0f;
 			aw[2] = 1.0f;
+			aw[3] = 0.0f;
+		}
+		else if(Keyboard.isKeyDown(Keyboard.KEY_I)){
+			aw[0] = 0.0f;
+			aw[1] = 0.0f;
+			aw[2] = 0.0f;
+			aw[3] = 1.0f;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_G) && aw[0] < 1.0f){
 			float s = 1.0f - aw[0];
 			aw[0] += 0.01f;
 			aw[1] -= 0.01f * aw[1]/s;
 			aw[2] -= 0.01f * aw[2]/s;
+			aw[3] -= 0.01f * aw[3]/s;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_H) && aw[1] < 1.0f){
 			float s = 1.0f - aw[1];
 			aw[0] -= 0.01f * aw[0]/s;
 			aw[1] += 0.01f;
 			aw[2] -= 0.01f * aw[2]/s;
+			aw[3] -= 0.01f * aw[3]/s;
 		}
 		else if(Keyboard.isKeyDown(Keyboard.KEY_J) && aw[2] < 1.0f){
 			float s = 1.0f - aw[2];
 			aw[0] -= 0.01f * aw[0]/s;
 			aw[1] -= 0.01f * aw[1]/s;		
 			aw[2] += 0.01f;
+			aw[3] -= 0.01f * aw[3]/s;
 		}
+		else if(Keyboard.isKeyDown(Keyboard.KEY_K) && aw[3] < 1.0f){
+			float s = 1.0f - aw[3];
+			aw[0] -= 0.01f * aw[0]/s;
+			aw[1] -= 0.01f * aw[1]/s;
+			aw[2] -= 0.01f * aw[2]/s;			
+			aw[3] += 0.01f;
+		}
+		
 		aw[0] = aw[0] < 0.001f ? 0.0f : aw[0] > 1.0f ? 1.0f : aw[0];
 		aw[1] = aw[1] < 0.001f ? 0.0f : aw[1] > 1.0f ? 1.0f : aw[1];
 		aw[2] = aw[2] < 0.001f ? 0.0f : aw[2] > 1.0f ? 1.0f : aw[2];
+		aw[3] = aw[3] < 0.001f ? 0.0f : aw[3] > 1.0f ? 1.0f : aw[3];
 		
-		System.out.println((int)(100*aw[0]) + " " + (int)(100*aw[1]) + " " + (int)(100*aw[2]));
+		System.out.println((int)(100*aw[0]) + " " + (int)(100*aw[1]) + " " + (int)(100*aw[2]) + " " + (int)(100*aw[3]));
 		setWeights(aw);
 		
 		
