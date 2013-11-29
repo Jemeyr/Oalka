@@ -221,7 +221,7 @@ public class GLOperations {
 		xaxis.normalise();
 		
 		Vector3f yaxis = Vector3f.cross(zaxis, xaxis, null);
-		yaxis.normalise();//fuck whatever
+		yaxis.normalise();//shouldn't be necessary but can't hurt
 		
 		Matrix4f orientation = new Matrix4f();
 		
